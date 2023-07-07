@@ -11,8 +11,8 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
     "moduleResolution": "Node",
-    "module": "es2020",
-    "target": "es2020",
+    "module": "ES2022",
+    "target": "ES2022",
     "rootDir": "./src",
     "outDir": "./dist",
     "sourceMap": true,
@@ -39,5 +39,5 @@
     "noUnusedParameters": true
   },
   "exclude": ["node_modules", "test"],
-  "include": ["src/**/*.ts"]
+  "include": ["./src/**/*.ts"]
 }

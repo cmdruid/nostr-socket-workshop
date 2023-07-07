@@ -7,15 +7,25 @@
   "type": "module",
   "dependencies": {
     "@cmdcode/buff-utils": "^1.7.7",
-    "nostr-tools": "^1.12.0",
-    "websocket-polyfill": "^0.0.3"
+    "websocket-polyfill": "^0.0.3",
+    "nostr-tools": "^1.12.0"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.2",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-typescript": "^11.1.2",
     "@types/node": "^20.3.3",
+    "rollup": "^3.26.2",
     "ts-node": "^10.9.1",
+    "tslib": "^2.6.0",
     "typescript": "^5.1.6"
   },
   "scripts": {
-    "scratch": "node --loader ts-node/esm --no-warnings test/scratch.ts"
+    "build": "rollup -c rollup.config.ts --configPlugin typescript",
+    "clean": "rm -rf dist/*",
+    "scratch": "node --loader ts-node/esm --no-warnings test/scratch.ts",
+    "types": "tsc",
+    "release": "yarn clean && yarn types && yarn build"
   }
 }

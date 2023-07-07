@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="../dist/bundle.min.js"></script>
+  <script>
+    const relays = [ 'wss://spore.ws' ]
+    const secret = 'ab'.repeat(32)
+    const config = { echo: true, cipher: 'test' }
+
+    const socket = new NostrSocket(relays, secret, config)
+
+    socket.on('ping', (msg, envelope) => {
+      console.log('msg:', msg)
+      console.log('env:', envelope)
+    })
+
+    socket.pub('ping', 'Hello world!')
+  </script>
+</body>
+</html>

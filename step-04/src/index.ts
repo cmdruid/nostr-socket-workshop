@@ -20,7 +20,7 @@ import {
 import * as crypto from './crypto.js'
 import * as util   from './utils.js'
 
-export class NostrSocket extends EventEmitter {
+export default class NostrSocket extends EventEmitter {
   readonly _pool   : SimplePool
   readonly _secret : string
   readonly filter  : Filter

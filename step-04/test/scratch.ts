@@ -1,5 +1,5 @@
 import { Buff } from '@cmdcode/buff-utils'
-import { NostrSocket } from '../src/index.js'
+import NostrSocket from '../src/index.js'
 
 const relays = [ 'wss://spore.ws' ]
 const secret = Buff.str('alice').digest.hex
