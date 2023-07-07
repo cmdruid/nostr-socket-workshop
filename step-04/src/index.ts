@@ -8,7 +8,12 @@ import {
   Filter,
   SimplePool,
   Sub,
-  getPublicKey
+  UnsignedEvent,
+  generatePrivateKey,
+  getEventHash,
+  getPublicKey,
+  getSignature,
+  validateEvent
 } from 'nostr-tools'
 
 import { 
@@ -20,9 +25,10 @@ import {
 import * as crypto from './crypto.js'
 import * as util   from './utils.js'
 
-export default class NostrSocket extends EventEmitter {
+export class NostrSocket extends EventEmitter {
   readonly _pool   : SimplePool
-  readonly _secret : string
+  readonly _pubkey : string
+  readonly _signer : Signer
   readonly filter  : Filter
   readonly relays  : string[]
   readonly opt     : SocketOptions
@@ -31,14 +37,16 @@ export default class NostrSocket extends EventEmitter {
   _sub      : Sub
 
   constructor (
+    signer  : Signer,
+    pubkey  : string,
     relays  : string[],
-    secret  : string,
     config ?: SocketConfig
   ) {
     super()
 
     this._pool   = new SimplePool()
-    this._secret = secret
+    this._pubkey = pubkey
+    this._signer = signer
 
     this.relays  = relays
     this.opt     = get_config(config)
@@ -48,8 +56,8 @@ export default class NostrSocket extends EventEmitter {
       since : util.now() - 60,
     }
 
-    this.cipher    = config?.cipher
-    this._sub      = this.sub(this.filter)
+    this.cipher  = config?.cipher
+    this._sub    = this.sub(this.filter)
   }
 
   get cipher () : string | undefined {
@@ -73,7 +81,7 @@ export default class NostrSocket extends EventEmitter {
   }
 
   get pubkey () : string {
-    return getPublicKey(this._secret)
+    return this._pubkey
   }
 
   get template () : EventTemplate {
@@ -117,13 +125,38 @@ export default class NostrSocket extends EventEmitter {
     payload   : any,
     template ?: Partial<EventTemplate>
   ) {
-    const base  = { ...this.template, ...template }
-    let temp    = util.formatEvent(eventName, payload, base)
-        temp    = await crypto.encryptEvent(temp, this._cipher)
-    const event = util.signEvent(temp, this._secret)
-    const pub   = this._pool.publish(this.relays, event)
+    const base   = { ...this.template, ...template }
+    let temp     = util.formatEvent(eventName, payload, base)
+        temp     = await crypto.encryptEvent(temp, this._cipher)
+    const event  = { ...temp, pubkey: this.pubkey }
+    const signed = await this._signer.signEvent(event)
+    const pub    = this._pool.publish(this.relays, signed)
     pub.on('ok', (...data : any[]) => this.emit('_ok', data))
     pub.on('failed', (...data : any[]) => this.emit('_failed', data))
     return pub
+  }
+}
+
+export class Signer {
+  static generate () : Signer {
+    const sec = generatePrivateKey()
+    return new Signer(sec)
+  }
+
+  readonly _secret : string
+
+  constructor (secret : string) {
+    this._secret = secret
+  }
+
+  async getPublicKey () : Promise<string> {
+    return getPublicKey(this._secret)
+  }
+
+  async signEvent(event : UnsignedEvent) : Promise<Event> {
+    validateEvent(event)
+    const id  = getEventHash(event)
+    const sig = getSignature(event, this._secret)
+    return { ...event, id, sig }
   }
 }

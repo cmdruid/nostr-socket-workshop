@@ -1,5 +1,4 @@
 import 'websocket-polyfill'
-import { now } from './utils.js'
 
 import {
   Event,
@@ -14,9 +13,10 @@ import {
   get_config 
 } from './config.js'
 
+import * as util from './utils.js'
+
 export class NostrSocket {
   readonly _pool   : SimplePool
-  readonly _secret : string
   readonly filter  : Filter
   readonly relays  : string[]
   readonly opt     : SocketOptions
@@ -25,18 +25,16 @@ export class NostrSocket {
 
   constructor (
     relays  : string[],
-    secret  : string,
     config ?: SocketConfig
   ) {
     this._pool   = new SimplePool()
-    this._secret = secret
 
     this.relays  = relays
     this.opt     = get_config(config)
 
     this.filter  = { 
       kinds : [ this.opt.kind ],
-      since : now(),
+      since : util.now(),
     }
 
     this._sub    = this.sub(this.filter)
@@ -48,13 +46,13 @@ export class NostrSocket {
 
   sub (filter : Filter) {
     const sub = this.pool.sub(this.relays, [ filter ])
-    sub.on('event', (event) => {
-      void this.eventHandler(event)
+    sub.on('event', (event : Event) => {
+      void this._eventHandler(event)
     })
     return sub
   }
 
-  eventHandler (event : Event) {
+  _eventHandler (event : Event) {
     console.log('event:', event)
   }
 }

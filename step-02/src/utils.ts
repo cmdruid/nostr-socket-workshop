@@ -1,9 +1,6 @@
 import {
   Event,
   EventTemplate,
-  getEventHash,
-  getPublicKey,
-  getSignature,
   validateEvent,
   verifySignature
 } from 'nostr-tools'
@@ -29,17 +26,6 @@ export function parseEvent (
     throw new TypeError('Invalid content payload!')
   }
   return arr
-}
-
-export function signEvent (
-  template : EventTemplate,
-  secret   : string
-) : Event {
-  const pubkey    = getPublicKey(secret)
-  const unsigned  = { ...template, pubkey }
-  const id  = getEventHash(unsigned)
-  const sig = getSignature(unsigned, secret)
-  return { ...unsigned, id, sig }
 }
 
 export function verifyEvent(

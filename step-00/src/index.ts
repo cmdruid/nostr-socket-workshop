@@ -4,14 +4,20 @@ import {
   get_config 
 } from './config.js'
 
-export class NostrSocket {
-  readonly _secret : string
-  readonly opt     : SocketOptions
+export default class NostrSocket {
+  readonly opt : SocketOptions
+
   constructor (
-    secret : string, 
     config : SocketConfig
   ) {
+    this.opt = get_config(config)
+  }
+}
+
+export class Signer {
+  readonly _secret : string
+
+  constructor (secret : string) {
     this._secret = secret
-    this.opt     = get_config(config)
   }
 }

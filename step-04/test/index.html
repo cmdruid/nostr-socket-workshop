@@ -7,19 +7,31 @@
 </head>
 <body>
   <script src="../dist/bundle.min.js"></script>
-  <script>
-    const relays = [ 'wss://spore.ws' ]
-    const secret = 'ab'.repeat(32)
-    const config = { echo: true, cipher: 'test' }
+  <script type="module">
+    const { NostrSocket, Signer } = window.nostr_socket
 
-    const socket = new NostrSocket(relays, secret, config)
+    const signer = Signer.generate()
+    const pubkey = await signer.getPublicKey()
+    const relays = [ 'wss://spore.ws' ]
+    const config = { echo: true, cipher : 'deadbeef' }
+
+    const socket = new NostrSocket(signer, pubkey, relays, config)
 
     socket.on('ping', (msg, envelope) => {
       console.log('msg:', msg)
       console.log('env:', envelope)
     })
 
+    socket.on('ok', (data) => {
+      console.log('ok', data)
+    })
+
+    socket.on('failed', (data) => {
+      console.log('failed', data)
+    })
+
     socket.pub('ping', 'Hello world!')
+
   </script>
 </body>
 </html>
