@@ -10,7 +10,7 @@ socket.on('open', () => {
   
   const filter = {
     kinds : [ 1 ],
-    since : now() - (60 * 60)
+    since : now()
   }
 
   socket.send(JSON.stringify(['REQ', subid, filter ]))
@@ -25,7 +25,7 @@ socket.on('message', (msg) => {
     const envelope = JSON.parse(msg)
 
     if (envelope[0] === 'EVENT') {
-      // console.log('event:', envelope[2])
+      console.log('event:', envelope[2])
     } else {
       console.log('relay:', envelope)
     }

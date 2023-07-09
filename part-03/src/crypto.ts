@@ -13,19 +13,19 @@ if (
   throw new Error('Subtle crypto library not found on this device!')
 }
 
-async function getKey (secret : Bytes) {
-  /** Derive a CryptoKey object (for Webcrypto library). */
-  const seed    = Buff.bytes(secret)
-  const options = { name: 'AES-CBC' }
-  const usage   = [ 'encrypt', 'decrypt' ] as KeyUsage[]
-  return subtle.importKey('raw', seed, options, true, usage)
+export function getSecret (seed : string) : string {
+  return Buff.str(seed).digest.hex
+}
+export function getLabel (secret : string) : string {
+  return Buff.hex(secret).digest.hex
 }
 
-export function getCipher (secret : string) : string {
-  return Buff.str(secret).digest.hex
-}
-export function getLabel (cipher : string) : string {
-  return Buff.hex(cipher).digest.hex
+async function getKey (secret : Bytes) {
+  /** Derive a CryptoKey object (for Webcrypto library). */
+  const key     = Buff.bytes(secret)
+  const options = { name: 'AES-CBC' }
+  const usage   = [ 'encrypt', 'decrypt' ] as KeyUsage[]
+  return subtle.importKey('raw', key, options, true, usage)
 }
 
 export async function encrypt (

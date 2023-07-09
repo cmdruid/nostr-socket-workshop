@@ -36,10 +36,3 @@ export function verifyEvent(
     throw new Error('Invalid signature!')
   }
 }
-
-export function is_author (
-  event  : Event,
-  pubkey : string
-) {
-  return event.pubkey === pubkey
-}

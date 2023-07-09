@@ -2,10 +2,15 @@
 # yarn lockfile v1
 
 
-"@cmdcode/buff-utils@^1.7.7":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@cmdcode/buff-utils/-/buff-utils-1.8.0.tgz#0a33b35a2bb9f75ff22a41214835b22b4f580c2e"
-  integrity sha512-3CLuWJnZXhgsDCfITbpauTQWU4Z55IoV4oRP8zTshquZf3W4VjdfVTJCII/LFaGO/Pvn2VoPg5ktcKtJ575pwQ==
+"@cmdcode/buff-utils@^1.9.7":
+  version "1.9.7"
+  resolved "https://registry.yarnpkg.com/@cmdcode/buff-utils/-/buff-utils-1.9.7.tgz#789d75f87547341620dad4917080847ab18a22b1"
+  integrity sha512-Gfj4ZspY/weIjvNx9cAOmXQTTp11IHOSA6QKTowQZ6jNYrXWqBbzkPT5HLfqNK0hElWfrSBhN00bt0njVHTmBA==
+
+"@cmdcode/crypto-utils@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@cmdcode/crypto-utils/-/crypto-utils-2.0.4.tgz#3fb34701338bd51c8f2b6b7fe9231f9d0be9d402"
+  integrity sha512-kLX7heB41px8tLrJ47FvLFyBtj+650a22dne8fx+hrt0aKQPdnCaWjipf7rKrhxszCUDcVtXpe5oAEfY/Bf0aQ==
 
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
@@ -201,7 +206,7 @@ node-gyp-build@^4.3.0:
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.6.0.tgz#0c52e4cbf54bbd28b709820ef7b6a3c2d6209055"
   integrity sha512-NTZVKn9IylLwUzaKjkas1e4u2DLNcV4rdYagA4PWdPwW87Bi7z+BznyKSRwS/761tV/lzCGXplWsiaMjLqP2zQ==
 
-nostr-tools@^1.12.0:
+nostr-tools@^1.12.1:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-1.12.1.tgz#4ac9c0d1cff8c7107b0d3ef647571137c2250557"
   integrity sha512-ZeoV7g3jBUAlb4mKa3C+6hrc84htPkbebMShfGNgV4vAiz18e/sQukUBFL6vb/+sxZy+dBQFkRwsJIaVFs8Gfw==

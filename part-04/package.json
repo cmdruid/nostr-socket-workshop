@@ -6,7 +6,7 @@
   "description": "Example project for the Nostr Devs machine-to-machine course.",
   "type": "module",
   "dependencies": {
-    "@cmdcode/buff-utils": "^1.7.7",
+    "@cmdcode/buff-utils": "^1.9.7",
     "websocket-polyfill": "^0.0.3",
     "nostr-tools": "^1.12.0"
   },

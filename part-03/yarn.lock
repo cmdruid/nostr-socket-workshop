@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@cmdcode/buff-utils@^1.9.7":
+  version "1.9.7"
+  resolved "https://registry.yarnpkg.com/@cmdcode/buff-utils/-/buff-utils-1.9.7.tgz#789d75f87547341620dad4917080847ab18a22b1"
+  integrity sha512-Gfj4ZspY/weIjvNx9cAOmXQTTp11IHOSA6QKTowQZ6jNYrXWqBbzkPT5HLfqNK0hElWfrSBhN00bt0njVHTmBA==
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -196,7 +201,7 @@ node-gyp-build@^4.3.0:
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.6.0.tgz#0c52e4cbf54bbd28b709820ef7b6a3c2d6209055"
   integrity sha512-NTZVKn9IylLwUzaKjkas1e4u2DLNcV4rdYagA4PWdPwW87Bi7z+BznyKSRwS/761tV/lzCGXplWsiaMjLqP2zQ==
 
-nostr-tools@^1.12.1:
+nostr-tools@^1.12.0:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-1.12.1.tgz#4ac9c0d1cff8c7107b0d3ef647571137c2250557"
   integrity sha512-ZeoV7g3jBUAlb4mKa3C+6hrc84htPkbebMShfGNgV4vAiz18e/sQukUBFL6vb/+sxZy+dBQFkRwsJIaVFs8Gfw==

@@ -8,3 +8,5 @@ const config = { echo: true, cipher: 'test' }
 const socket = new NostrSocket(signer, pubkey, relays, config)
 
 socket.pub('ping', 'Hello world!')
+
+// socket.cipher = 'deadbeef'
