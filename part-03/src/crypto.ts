@@ -41,7 +41,7 @@ export async function encrypt (
     : Buff.random(16)
   const opt = { name: 'AES-CBC', iv }
   return subtle.encrypt(opt, key, msg)
-    .then((bytes) => Buff.raw(bytes).base64 + '?iv=' + iv.base64)
+    .then((bytes) => Buff.bytes(bytes).base64 + '?iv=' + iv.base64)
 }
 
 export async function decrypt (
@@ -58,7 +58,7 @@ export async function decrypt (
   const iv  = Buff.base64(vector)
   const opt = { name: 'AES-CBC', iv }
   return subtle.decrypt(opt, key, msg)
-    .then(decoded => Buff.raw(decoded).str)
+    .then(decoded => Buff.bytes(decoded).str)
 }
 
 export async function encryptEvent (

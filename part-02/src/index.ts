@@ -70,7 +70,7 @@ export class NostrSocket {
     }
   }
 
-  _echoHandler (event : Event) : boolean {
+  _isEcho (event : Event) : boolean {
     return (
       !this.opt.echo && 
       event.pubkey === this.pubkey
@@ -80,7 +80,7 @@ export class NostrSocket {
   _eventHandler (event : Event)  {
     try {
       util.verifyEvent(event)
-      if (this._echoHandler(event)) return
+      if (this._isEcho(event)) return
       const [ label, payload ] = util.parseEvent(event)
       console.log(`[${label}]: ${payload}`)
     } catch (err) {

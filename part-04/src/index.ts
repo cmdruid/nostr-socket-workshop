@@ -60,12 +60,6 @@ export class NostrSocket extends EventEmitter {
     this._sub    = this.sub(this.filter)
   }
 
-  get cipher () : string | undefined {
-    return (this._cipher !== undefined)
-      ? crypto.getLabel(this._cipher)
-      : undefined
-  }
-
   set cipher (secret : string | undefined) {
     if (secret === undefined) {
       this._cipher = undefined

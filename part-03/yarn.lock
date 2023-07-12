@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@cmdcode/buff-utils@^1.9.7":
-  version "1.9.7"
-  resolved "https://registry.yarnpkg.com/@cmdcode/buff-utils/-/buff-utils-1.9.7.tgz#789d75f87547341620dad4917080847ab18a22b1"
-  integrity sha512-Gfj4ZspY/weIjvNx9cAOmXQTTp11IHOSA6QKTowQZ6jNYrXWqBbzkPT5HLfqNK0hElWfrSBhN00bt0njVHTmBA==
+"@cmdcode/buff-utils@^1.9.8":
+  version "1.9.8"
+  resolved "https://registry.yarnpkg.com/@cmdcode/buff-utils/-/buff-utils-1.9.8.tgz#42cab289d257f9cd9da9dfcfb7b41abfc16473d3"
+  integrity sha512-FNoPONkaraYheQmNtkyY+SZb7h2uUyms4GC1Wb0DlSIdXmw9i91KBDmJX0utrNsoSJ694FSHZmRaIyK8n4mI0A==
 
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"

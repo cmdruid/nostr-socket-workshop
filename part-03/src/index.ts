@@ -14,14 +14,20 @@ import {
   validateEvent
 } from 'nostr-tools'
 
+import {
+  getLabel,
+  getSecret,
+  encryptEvent,
+  decryptEvent
+} from './crypto.js'
+
 import { 
   SocketConfig, 
   SocketOptions, 
   get_config 
 } from './config.js'
 
-import * as crypto from './crypto.js'
-import * as util   from './utils.js'
+import * as util from './utils.js'
 
 export class NostrSocket {
   readonly _pool   : SimplePool
@@ -52,13 +58,13 @@ export class NostrSocket {
       since : util.now(),
     }
 
-    this.cipher  = config?.cipher
-    this._sub    = this.sub(this.filter)
+    this.cipher = config?.cipher
+    this._sub   = this.sub(this.filter)
   }
 
   get cipher () : string | undefined {
     return (this._cipher !== undefined)
-      ? crypto.getLabel(this._cipher)
+      ? getLabel(this._cipher)
       : undefined
   }
 
@@ -67,8 +73,8 @@ export class NostrSocket {
       this._cipher = undefined
       delete this.filter['#h']
     } else {
-      this._cipher      = crypto.getSecret(secret)
-      this.filter['#h'] = [ crypto.getLabel(this._cipher) ]
+      this._cipher      = getSecret(secret)
+      this.filter['#h'] = [ getLabel(this._cipher) ]
     }
   }
 
@@ -89,7 +95,7 @@ export class NostrSocket {
     }
   }
 
-  _echoHandler (event : Event) : boolean {
+  _isEcho (event : Event) : boolean {
     return (
       !this.opt.echo && 
       event.pubkey === this.pubkey
@@ -99,8 +105,8 @@ export class NostrSocket {
   async _eventHandler (event : Event) : Promise<void> {
     try {
       util.verifyEvent(event)
-      if (this._echoHandler(event)) return
-      const dec = await crypto.decryptEvent(event, this._cipher)
+      if (this._isEcho(event)) return
+      const dec = await decryptEvent(event, this._cipher)
       const [ label, payload ] = util.parseEvent(dec)
       console.log(`[${label}]: ${payload}`)
       console.log('envelope:', event)
@@ -125,7 +131,7 @@ export class NostrSocket {
   ) {
     const base   = { ...this.template, ...template }
     let   temp   = util.formatEvent(eventName, payload, base)
-          temp   = await crypto.encryptEvent(temp, this._cipher)
+          temp   = await encryptEvent(temp, this._cipher)
     const event  = { ...temp, pubkey: this.pubkey }
     const signed = await this._signer.signEvent(event)
     const pub    = this._pool.publish(this.relays, signed)
@@ -156,4 +162,3 @@ export class Signer {
     return { ...event, id, sig }
   }
 }
-
