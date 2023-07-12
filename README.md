@@ -1,8 +1,8 @@
 # NostrSocket Workshop
 
-This repo is an introduction to development using the nostr protocol.
+This workshop is an introduction to development using the nostr protocol.
 
-We will be building an example project called `NostrSocket`, which is a very practical library for performing machine-to-machine communications using a virtual socket over the nostr network.
+We will be building an example project called `NostrSocket`, which communicates using a virtual socket over the nostr network.
 
 ## Overview
 
@@ -10,28 +10,27 @@ This demo project is broken down into 4 parts:
 
 ### Part 0: The Boilerplate
 
-In this section, we will cover setting up the project from scratch, plus review the boilerplate code that we are starting with. As a bonus, we'll also briefly cover connecting to a nostr relay from a basic `WebSocket` object.
+In this section, we cover setting up the project from scratch, plus review the boilerplate code that we are starting with.
 
  * Git clone repo.
- * Make sure node is up-to-date.
+ * Make sure node is up-to-date (v19).
  * Install all dependencies.
- * Insert boilerplate configs.
+ * Review boilerplate code.
 
 ### Part 1: Subscribe to Events
 
-In this section, we will demonstrate how to connect to a relay and request events using the `nostr-tools` library.
+In this section, we demonstrate how to connect to a relay and request events using the `nostr-tools` library.
 
  * Connecting to a relay pool.
  * Subscribe and listen to events.
- * Log the responses.
+ * Log the responses to console.
 
 ### Part 2: Sign and Publish Events
 
-In this section, we will demonstrate how to publish our own notes to a relay. We'll also cover the use of a signing device, and the concept of using public keys as our identity on nostr.
-
+In this section, we will publish our own notes to a relay. We'll also cover the use of hashing, digital signatures, and signing devices.
  * Craft a note for publishing.
  * Sign and publish notes to the pool.
- * Validate and parse the response.
+ * Parse and validate the response.
 
 ### Part 3: Create an Encrypted Channel
 
@@ -40,15 +39,15 @@ In this section, we will add encryption to our messages, and cover how to tag an
  * Setup our `encrypt` and `decrypt` methods. 
  * Adjust filter to subscribe to tagged events.
  * Adjust publisher to encrypt and tag events.
- * Adjust handler to decrypt the responses.
+ * Adjust handler to decrypt the tagged responses.
 
-### Part 4: Add an Events API.
+### Part 4: Add an EventEmitter API.
 
-In this section, we will complete our project by adding a basic EventEmitter API, then piping our event traffic into the emitter. This will complete the course and provide us with a virtual websocket that we can use to communicate between machines.
+In this section, we will complete our socket by adding a basic EventEmitter API, then move our traffic into the emitter. As a bonus, we will cover publishing our library to a package manager, and importing it onto different machines.
 
  * Extend a basic EventEmitter class.
- * Forward events from nostr to event bus.
- * Handle the echo of our own events.
+ * Forward events from nostr to event emitter.
+ * Compile, bundle and publish our library.
  * Wrap-up and demonstration of `NostrSocket`.
 
 ## Setup
@@ -66,7 +65,7 @@ Once downloaded, enter the project directory, then enter any lesson step to foll
 
 ```bash
 ## Enter the directory of a lesson.
-cd part-00
+cd part_00
 ## Install any dependencies.
 npm install
 ## Run the example scratch file.
@@ -89,7 +88,7 @@ https://github.com/nbd-wtf/nostr-tools
 **nostr army knife**  
 https://nak.nostr.com
 
-**nostr watch**  
+**Nostr Watch**  
 https://nostr.watch  
 
 **nostr.band**  
