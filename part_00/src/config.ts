@@ -7,7 +7,7 @@ export type SocketConfig = Partial<SocketOptions>
 // Defines our default options.
 export const DEFAULTS : SocketOptions = {}
 
-export function get_config (
+export function socket_config (
   config : SocketConfig = {}
 ) : SocketOptions {
   /* Applies our default options, plus custom configs.

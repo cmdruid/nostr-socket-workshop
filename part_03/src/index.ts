@@ -17,7 +17,7 @@ import {
 import { 
   SocketConfig, 
   SocketOptions, 
-  get_config 
+  socket_config 
 } from './config.js'
 
 import * as crypt from './crypto.js'
@@ -45,7 +45,7 @@ export class NostrSocket {
     this._signer = signer
 
     this.relays  = relays
-    this.opt     = get_config(config)
+    this.opt     = socket_config(config)
 
     this.filter  = { 
       kinds : [ this.opt.kind ],

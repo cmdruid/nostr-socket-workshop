@@ -8,7 +8,7 @@ export const DEFAULTS : SocketOptions = {
   kind : 20000
 }
 
-export function get_config (
+export function socket_config (
   config : SocketConfig = {}
 ) : SocketOptions {
   return { ...DEFAULTS, ...config  }

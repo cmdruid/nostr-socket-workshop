@@ -13,7 +13,7 @@ export const DEFAULTS : SocketOptions = {
   tags : []
 }
 
-export function get_config (
+export function socket_config (
   config : SocketConfig = {}
 ) : SocketOptions {
   return { ...DEFAULTS, ...config  }

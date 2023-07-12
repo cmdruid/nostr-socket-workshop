@@ -10,7 +10,7 @@ import {
 import { 
   SocketConfig, 
   SocketOptions, 
-  get_config 
+  socket_config 
 } from './config.js'
 
 import * as util from './utils.js'
@@ -30,7 +30,7 @@ export class NostrSocket {
     this._pool   = new SimplePool()
 
     this.relays  = relays
-    this.opt     = get_config(config)
+    this.opt     = socket_config(config)
 
     this.filter  = { 
       kinds : [ this.opt.kind ],

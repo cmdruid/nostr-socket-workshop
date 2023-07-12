@@ -1,16 +1,16 @@
 import { 
   SocketConfig, 
   SocketOptions, 
-  get_config 
+  socket_config 
 } from './config.js'
 
-export default class NostrSocket {
+export class NostrSocket {
   readonly opt : SocketOptions
 
   constructor (
     config : SocketConfig
   ) {
-    this.opt = get_config(config)
+    this.opt = socket_config(config)
   }
 }
 

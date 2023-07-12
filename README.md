@@ -55,7 +55,11 @@ In this section, we will complete our socket by adding a basic EventEmitter API,
 To begin, use `git clone` to download this repo onto your local machine.
 
 ```bash
-# Clone the repo onto your machine
+# Check that you have git and node installed.
+which git && which node
+# Check you are using the latest version of node.
+fnm current # or `nvm current`
+# Clone the repo onto your machine.
 git clone https://github.com/cmdruid/nostr-socket-workshop
 # Enter the project directory.
 cd nostr-socket-workshop
@@ -77,6 +81,9 @@ npm run scratch
 Please feel free to post an issue of you have any questions, or need clarification on something here.
 
 ## Resources
+
+**Fast Node Manager**  
+https://fnm.vercel.app  
 
 **Nostr Implementation Proposals**  
 https://nips.be  
