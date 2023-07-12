@@ -8,7 +8,7 @@ export class NostrSocket {
   readonly opt : SocketOptions
 
   constructor (
-    config : SocketConfig
+    config ?: SocketConfig
   ) {
     this.opt = socket_config(config)
   }

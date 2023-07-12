@@ -6,7 +6,7 @@ console.log(`
                      Number Fields
             <-- We can div, sub, add, mul -->
         
-Sign   : sig_int  = (sec_int * msg_int) + nonce_int
+Sign   : sig_key  = (sec_key * msg_key) + nonce_key
 
       | | |  fields can convert to points   x x x
       v v v  points can't convert to fields | | |
@@ -16,9 +16,10 @@ Verify : nonce_pt = (pub_pt * msg_pt) - sig_pt
               x-- We can neg, add, mul -->
                      Curve Points
 
-For a given pub and msg:
-  - The holder of sec_int can produce sig_int and nonce_int.
-  - Anyone can verify that sig_int contains your pub, msg, and nonce.
+For a given secret and message:
+  - The holder of sec_key can produce sig_key and nonce_pt.
+  - Anyone can verify that sig_key contains your sec_key,
+    msg_key, and nonce_key via pub_pt, msg_pt, and nonce_pt.
 `)
 
 // Create a random 32-byte key.
