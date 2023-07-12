@@ -7,6 +7,7 @@
 </head>
 <body>
   <script src="../dist/bundle.min.js"></script>
+  <!-- <script src="https://unpkg.com/@cmdcode/nostr-socket-workshop/dist/bundle.min.js"></script> -->
   <script type="module">
     const { NostrSocket, Signer } = window.nostr_socket
 
@@ -22,11 +23,15 @@
       console.log('env:', envelope)
     })
 
-    socket.on('ok', (data) => {
+    socket.on('_eose', () => {
+      console.log('connected!')
+    })
+
+    socket.on('_ok', (data) => {
       console.log('ok', data)
     })
 
-    socket.on('failed', (data) => {
+    socket.on('_failed', (data) => {
       console.log('failed', data)
     })
 

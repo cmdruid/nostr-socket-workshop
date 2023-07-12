@@ -1,5 +1,7 @@
 import 'websocket-polyfill'
 
+import { EventEmitter } from './emitter.js'
+
 import {
   Event,
   EventTemplate,
@@ -20,9 +22,10 @@ import {
   get_config 
 } from './config.js'
 
-import * as util from './utils.js'
+import * as crypt from './crypto.js'
+import * as util  from './utils.js'
 
-export class NostrSocket {
+export class NostrSocket extends EventEmitter {
   readonly _pool   : SimplePool
   readonly _pubkey : string
   readonly _signer : Signer
@@ -30,7 +33,8 @@ export class NostrSocket {
   readonly relays  : string[]
   readonly opt     : SocketOptions
 
-  _sub : Sub
+  _cipher  ?: string
+  _sub      : Sub
 
   constructor (
     signer  : Signer,
@@ -38,6 +42,8 @@ export class NostrSocket {
     relays  : string[],
     config ?: SocketConfig
   ) {
+    super()
+
     this._pool   = new SimplePool()
     this._pubkey = pubkey
     this._signer = signer
@@ -47,10 +53,23 @@ export class NostrSocket {
 
     this.filter  = { 
       kinds : [ this.opt.kind ],
-      since : util.now(),
+      since : util.now() - 60,
     }
 
+    this.cipher  = config?.cipher
     this._sub    = this.sub(this.filter)
+  }
+
+  set cipher (seed : string | undefined) {
+    if (seed === undefined) {
+      this._cipher = undefined
+      delete this.filter['#h']
+    } else {
+      this._cipher = crypt.get_secret(seed)
+      this.filter['#h'] = [
+        crypt.get_label(this._cipher)
+      ]
+    }
   }
 
   get pool () : SimplePool {
@@ -70,29 +89,32 @@ export class NostrSocket {
     }
   }
 
-  _isEcho (event : Event) : boolean {
+  async _eventHandler (event : Event) : Promise<void> {
+    try {
+      util.verify_event(event)
+      if (this._echoHandler(event)) return
+      const dec = await crypt.decrypt_event(event, this._cipher)
+      const [ label, payload ] = util.parse_event(dec)
+      this.emit(label, payload, event)
+    } catch (err) {
+      const { message } = err as Error
+      this.emit('_err', [ message, event ])
+    }
+  }
+
+  _echoHandler (event : Event) : boolean {
     return (
       !this.opt.echo && 
       event.pubkey === this.pubkey
     )
   }
 
-  _eventHandler (event : Event)  {
-    try {
-      util.verifyEvent(event)
-      if (this._isEcho(event)) return
-      const [ label, payload ] = util.parseEvent(event)
-      console.log(`[${label}]: ${payload}`)
-    } catch (err) {
-      console.log('Failed to handle event:', event)
-      console.log(err)
-    }
-  }
-
   sub (filter : Filter) {
     const sub = this.pool.sub(this.relays, [ filter ])
+    sub.on('eose', () => { this.emit('_eose') })
     sub.on('event', (event) => {
-      void this._eventHandler(event)
+      this._eventHandler(event)
+      this.emit('_event', [ event ])
     })
     return sub
   }
@@ -103,10 +125,13 @@ export class NostrSocket {
     template ?: Partial<EventTemplate>
   ) {
     const base   = { ...this.template, ...template }
-    const temp   = util.formatEvent(eventName, payload, base)
+    let temp     = util.format_event(eventName, payload, base)
+        temp     = await crypt.encrypt_event(temp, this._cipher)
     const event  = { ...temp, pubkey: this.pubkey }
     const signed = await this._signer.signEvent(event)
     const pub    = this._pool.publish(this.relays, signed)
+    pub.on('ok', (...data : any[]) => this.emit('_ok', data))
+    pub.on('failed', (...data : any[]) => this.emit('_failed', data))
     return pub
   }
 }

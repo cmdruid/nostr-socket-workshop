@@ -14,20 +14,14 @@ import {
   validateEvent
 } from 'nostr-tools'
 
-import {
-  getLabel,
-  getSecret,
-  encryptEvent,
-  decryptEvent
-} from './crypto.js'
-
 import { 
   SocketConfig, 
   SocketOptions, 
   get_config 
 } from './config.js'
 
-import * as util from './utils.js'
+import * as crypt from './crypto.js'
+import * as util  from './utils.js'
 
 export class NostrSocket {
   readonly _pool   : SimplePool
@@ -64,7 +58,7 @@ export class NostrSocket {
 
   get cipher () : string | undefined {
     return (this._cipher !== undefined)
-      ? getLabel(this._cipher)
+      ? crypt.get_label(this._cipher)
       : undefined
   }
 
@@ -73,8 +67,10 @@ export class NostrSocket {
       this._cipher = undefined
       delete this.filter['#h']
     } else {
-      this._cipher      = getSecret(secret)
-      this.filter['#h'] = [ getLabel(this._cipher) ]
+      this._cipher = crypt.get_secret(secret)
+      this.filter['#h'] = [
+        crypt.get_label(this._cipher)
+      ]
     }
   }
 
@@ -104,10 +100,10 @@ export class NostrSocket {
 
   async _eventHandler (event : Event) : Promise<void> {
     try {
-      util.verifyEvent(event)
+      util.verify_event(event)
       if (this._isEcho(event)) return
-      const dec = await decryptEvent(event, this._cipher)
-      const [ label, payload ] = util.parseEvent(dec)
+      const dec = await crypt.decrypt_event(event, this._cipher)
+      const [ label, payload ] = util.parse_event(dec)
       console.log(`[${label}]: ${payload}`)
       console.log('envelope:', event)
     } catch (err) {
@@ -130,8 +126,8 @@ export class NostrSocket {
     template ?: Partial<EventTemplate>
   ) {
     const base   = { ...this.template, ...template }
-    let   temp   = util.formatEvent(eventName, payload, base)
-          temp   = await encryptEvent(temp, this._cipher)
+    let   temp   = util.format_event(eventName, payload, base)
+          temp   = await crypt.encrypt_event(temp, this._cipher)
     const event  = { ...temp, pubkey: this.pubkey }
     const signed = await this._signer.signEvent(event)
     const pub    = this._pool.publish(this.relays, signed)

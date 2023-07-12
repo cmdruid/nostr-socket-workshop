@@ -13,19 +13,12 @@ if (
   throw new Error('Subtle crypto library not found on this device!')
 }
 
-async function getKey (secret : Bytes) {
-  /** Derive a CryptoKey object (for Webcrypto library). */
+async function get_key (secret : Bytes) {
+  /* Convert our secret into a CryptoKey object. */
   const seed    = Buff.bytes(secret)
   const options = { name: 'AES-CBC' }
   const usage   = [ 'encrypt', 'decrypt' ] as KeyUsage[]
   return subtle.importKey('raw', seed, options, true, usage)
-}
-
-export function getCipher (secret : string) : string {
-  return Buff.str(secret).digest.hex
-}
-export function getLabel (cipher : string) : string {
-  return Buff.hex(cipher).digest.hex
 }
 
 export async function encrypt (
@@ -33,71 +26,90 @@ export async function encrypt (
   secret  : Bytes,
   vector ?: Bytes
 ) {
-  /** Encrypt a message using a CryptoKey object. */
-  const key = await getKey(secret)
+  /* Encrypt a message using a CryptoKey object. */
+  const key = await get_key(secret)
   const msg = Buff.str(message)
   const iv  = (vector !== undefined)
     ? Buff.bytes(vector)
     : Buff.random(16)
   const opt = { name: 'AES-CBC', iv }
   return subtle.encrypt(opt, key, msg)
-    .then((bytes) => Buff.raw(bytes).base64 + '?iv=' + iv.base64)
+    .then((bytes) => new Buff(bytes).base64 + '?iv=' + iv.base64)
 }
 
 export async function decrypt (
   encoded : string,
   secret  : Bytes
 ) {
-  /** Decrypt an encrypted message using a CryptoKey object. */
+  /* Decrypt an encrypted message using a CryptoKey object. */
   if (!encoded.includes('?iv=')) {
     throw new Error('Missing vector on encrypted message!')
   }
   const [ message, vector ] = encoded.split('?iv=')
-  const key = await getKey(secret)
+  const key = await get_key(secret)
   const msg = Buff.base64(message)
   const iv  = Buff.base64(vector)
   const opt = { name: 'AES-CBC', iv }
   return subtle.decrypt(opt, key, msg)
-    .then(decoded => Buff.raw(decoded).str)
+    .then(decoded => new Buff(decoded).str)
 }
 
-export async function encryptEvent (
+export function get_secret (seed : string) : string {
+  /* Convert our seed phrase into a valid secret. */
+  return Buff.str(seed).digest.hex
+}
+export function get_label (secret : string) : string {
+  /* Convert our secret into a valid label */
+  return Buff.hex(secret).digest.hex
+}
+
+export async function encrypt_event (
   template : EventTemplate,
-  cipher  ?: string
+  secret  ?: string
 ) : Promise<EventTemplate> {
-  const tmp = { ...template }
-  if (typeof cipher === 'string') {
-    const { content, tags } = tmp
-    const label      = getLabel(cipher)
-    const encrypted  = await encrypt(content, cipher)
-    tmp.content = encrypted
-    tmp.tags    = [ ...tags, [ 'h', label ]]
+  // Copy our template into a new object.
+  const temp = { ...template }
+  // If a secret string is provided:
+  if (typeof secret === 'string') {
+    // Unpack our event template.
+    const { content, tags } = temp
+    // Get the public hash of the secret.
+    const label      = get_label(secret)
+    // Encrypt the content of the event.
+    const encrypted  = await encrypt(content, secret)
+    // Update our template with the changes.
+    temp.content = encrypted
+    temp.tags    = [ ...tags, [ 'h', label ]]
   }
-  return tmp
+  // Return the event template.
+  return temp
 }
 
-export async function decryptEvent (
+export async function decrypt_event (
   event   : Event,
-  cipher ?: string
+  secret ?: string
 ) : Promise<Event> {
-  const ev = { ...event }
-  if (typeof cipher === 'string') {
-    const { content, tags } = ev
+  // Copy the event into a new object.
+  const ev_copy = { ...event }
+  // If a secret string is provided:
+  if (typeof secret === 'string') {
+    // Unpack our event object.
+    const { content, tags } = ev_copy
     // Compute the label from the secret.
-    const label  = getLabel(cipher)
+    const label  = get_label(secret)
     // Filter the 'h' tags from the tags array.
     const htags  = tags.filter(e => e[0] === 'h')
     // Strip out everything but the hashes.
     const hashes = htags.map(e => e[1])
-    // Check if the event meets our criteria.
+    // If the event matches our criteria:
     if (
       hashes.includes(label) &&
       content.includes('?iv=')
     ) {
       // Decrypt the event content.
-      ev.content = await decrypt(content, cipher)
+      ev_copy.content = await decrypt(content, secret)
       // Return event content as JSON.
     }
   }
-  return ev
+  return ev_copy
 }

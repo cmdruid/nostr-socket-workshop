@@ -1,7 +1,3 @@
-/**
- * Configuration File
- */
-
 // Defines our options interface.
 export interface SocketOptions {}
 
