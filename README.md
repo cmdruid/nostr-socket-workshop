@@ -57,7 +57,7 @@ To begin, use `git clone` to download this repo onto your local machine.
 ```bash
 # Check that you have git and node installed.
 which git && which node
-# Check you are using the latest version of node.
+# Check you are using the latest version of node (v19+).
 fnm current # or `nvm current`
 # Clone the repo onto your machine.
 git clone https://github.com/cmdruid/nostr-socket-workshop
