@@ -94,8 +94,8 @@ export class NostrSocket extends EventEmitter {
       util.verify_event(event)
       if (this._echoHandler(event)) return
       const dec = await crypt.decrypt_event(event, this._cipher)
-      const [ label, payload ] = util.parse_event(dec)
-      this.emit(label, payload, event)
+      const [ topic, payload ] = util.parse_event(dec)
+      this.emit(topic, payload, event)
     } catch (err) {
       const { message } = err as Error
       this.emit('_err', [ message, event ])
@@ -111,7 +111,7 @@ export class NostrSocket extends EventEmitter {
 
   sub (filter : Filter) {
     const sub = this.pool.sub(this.relays, [ filter ])
-    sub.on('eose', () => { this.emit('_eose') })
+    sub.on('eose', () => this.emit('_eose'))
     sub.on('event', (event) => {
       this._eventHandler(event)
       this.emit('_event', [ event ])
@@ -120,12 +120,12 @@ export class NostrSocket extends EventEmitter {
   }
 
   async pub (
-    eventName : string,
+    topic : string,
     payload   : any,
     template ?: Partial<EventTemplate>
   ) {
     const base   = { ...this.template, ...template }
-    let temp     = util.format_event(eventName, payload, base)
+    let temp     = util.format_event(topic, payload, base)
         temp     = await crypt.encrypt_event(temp, this._cipher)
     const event  = { ...temp, pubkey: this.pubkey }
     const signed = await this._signer.signEvent(event)

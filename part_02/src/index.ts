@@ -81,8 +81,9 @@ export class NostrSocket {
     try {
       util.verify_event(event)
       if (this._isEcho(event)) return
-      const [ label, payload ] = util.parse_event(event)
-      console.log(`[${label}]: ${payload}`)
+      const [ topic, payload ] = util.parse_event(event)
+      console.log(`[${topic}]: ${payload}`)
+      console.log('event:', event)
     } catch (err) {
       console.log('Failed to handle event:', event)
       console.log(err)
@@ -92,18 +93,18 @@ export class NostrSocket {
   sub (filter : Filter) {
     const sub = this.pool.sub(this.relays, [ filter ])
     sub.on('event', (event) => {
-      void this._eventHandler(event)
+      this._eventHandler(event)
     })
     return sub
   }
 
   async pub (
-    eventName : string,
-    payload   : any,
+    topic    : string,
+    payload  : any,
     template ?: Partial<EventTemplate>
   ) {
     const base   = { ...this.template, ...template }
-    const temp   = util.format_event(eventName, payload, base)
+    const temp   = util.format_event(topic, payload, base)
     const event  = { ...temp, pubkey: this.pubkey }
     const signed = await this._signer.signEvent(event)
     const pub    = this._pool.publish(this.relays, signed)

@@ -47,7 +47,7 @@ export class NostrSocket {
   sub (filter : Filter) {
     const sub = this.pool.sub(this.relays, [ filter ])
     sub.on('event', (event : Event) => {
-      void this._eventHandler(event)
+      this._eventHandler(event)
     })
     return sub
   }

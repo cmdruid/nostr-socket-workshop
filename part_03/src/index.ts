@@ -103,8 +103,8 @@ export class NostrSocket {
       util.verify_event(event)
       if (this._isEcho(event)) return
       const dec = await crypt.decrypt_event(event, this._cipher)
-      const [ label, payload ] = util.parse_event(dec)
-      console.log(`[${label}]: ${payload}`)
+      const [ topic, payload ] = util.parse_event(dec)
+      console.log(`[${topic}]: ${payload}`)
       console.log('envelope:', event)
     } catch (err) {
       console.log('Failed to handle event:', event)
@@ -115,18 +115,18 @@ export class NostrSocket {
   sub (filter : Filter) {
     const sub = this.pool.sub(this.relays, [ filter ])
     sub.on('event', (event) => {
-      void this._eventHandler(event)
+      this._eventHandler(event)
     })
     return sub
   }
 
   async pub (
-    eventName : string,
+    topic : string,
     payload   : any,
     template ?: Partial<EventTemplate>
   ) {
     const base   = { ...this.template, ...template }
-    let   temp   = util.format_event(eventName, payload, base)
+    let   temp   = util.format_event(topic, payload, base)
           temp   = await crypt.encrypt_event(temp, this._cipher)
     const event  = { ...temp, pubkey: this.pubkey }
     const signed = await this._signer.signEvent(event)

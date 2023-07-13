@@ -1,28 +1,44 @@
 import { Field, Point, sha256, util } from '@cmdcode/crypto-utils'
 
 console.log(`
-             Discreet Logarithm Cheat Sheet
+               Digital Signature Cheat Sheet
 
-                     Number Fields
-            <-- We can div, sub, add, mul -->
-        
-Sign   : sig_key  = (sec_key * msg_key) + nonce_key
+For certain number groups, the inverse for exponentiation
+has no known efficient solution (discreet log problem).
 
-      | | |  fields can convert to points   x x x
-      v v v  points can't convert to fields | | |
+                  Finite Number Fields
+                -3 -2 -1  N  +1 +2 +3
+              <-- div, sub, add, mul -->
 
-Verify : nonce_pt = (pub_pt * msg_pt) - sig_pt
+    | | |  we _can_ compute field num to a point  x x x
+    v v v  we can't reverse a point to field num  | | |
 
-              x-- We can neg, add, mul -->
-                     Curve Points
+              x-- ___, neg, add, mul -->
+                __ __ -1  P  +1 +2 +3
+                Elliptic Curve Points
 
-For a given secret and message:
-  - The holder of sec_key can produce sig_key and nonce_pt.
-  - Anyone can verify that sig_key contains your sec_key,
-    msg_key, and nonce_key via pub_pt, msg_pt, and nonce_pt.
+We can exploit this asymmetry to create a math proof which can be
+verified without revealing a secret num (zero-knowledge proof).
+
+Sign   : sig_num   = (sec_num * msg_num + nonce_num) % N
+Verify : nonce_pnt = (pub_pnt * msg_pnt - sig_pnt  ) % P
+
+For a given secret num and message:
+
+  - The holder of sec_num can produce a sig_num using a
+    given msg_key and random nonce_num / nonce_pnt.
+
+  - It is trivial to compute msg_num into msg_pnt and
+    sig_num into sig_pnt.
+
+  - Anyone can verify that sig_pnt is the solution to 
+    pub_pnt * msg_pnt + nonce_pnt.
+
+  - However it is infeasible to revert pub_pnt and nonce_pnt
+    into sec_num and nonce_num, keeping them both secret.
 `)
 
-// Create a random 32-byte key.
+// Create a random 32-byte secret key.
 const alice_secret = Field.mod(util.random(32))
 // Convert that key into a point on the curve.
 const alice_pubkey = Point.generate(alice_secret)

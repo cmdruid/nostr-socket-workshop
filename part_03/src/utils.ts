@@ -10,7 +10,7 @@ import {
 export const now = () => Math.floor(Date.now() / 1000)
 
 export function format_event (
-  label    : string,
+  topic    : string,
   payload  : string,
   template : EventTemplate
 ) : EventTemplate {
@@ -19,7 +19,7 @@ export function format_event (
    */
   return {
     ...template,
-    content : JSON.stringify([ label, payload ]),
+    content : JSON.stringify([ topic, payload ]),
   }
 }
 

@@ -9,7 +9,7 @@ const socket = new NostrSocket(signer, pubkey, relays, config)
 
 socket.on('pong', (payload, envelope) => {
   console.log('msg:', payload)
-  // console.log('env:', envelope)
+  console.log('env:', envelope)
 })
 
 socket.on('_eose', () => {

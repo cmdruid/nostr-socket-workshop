@@ -3,7 +3,7 @@ import { NostrSocket, Signer } from '../src/index.js'
 const signer = Signer.generate()
 const pubkey = await signer.getPublicKey()
 const relays = [ 'wss://spore.ws' ]
-const config = { echo: true, cipher: 'test' }
+const config = { echo: true, cipher: 'deadbeef' }
 
 const socket = new NostrSocket(signer, pubkey, relays, config)
 
