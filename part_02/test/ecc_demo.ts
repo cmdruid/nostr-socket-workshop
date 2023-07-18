@@ -15,7 +15,12 @@ has no known efficient solution (discreet log problem).
 
               x-- ___, neg, add, mul -->
                 __ __ -1  P  +1 +2 +3
-                Elliptic Curve Points
+                Elliptic Curve Pointsu const invoicePolling = useSelector((state) => state.polling);
+  const connected = useSelector((state) => state.connected);
+  const txid = useSelector((state) => state.txid);
+  const paid = useSelector((state) => state.paid);
+
+
 
 We can exploit this asymmetry to create a math proof which can be
 verified without revealing a secret num (zero-knowledge proof).
