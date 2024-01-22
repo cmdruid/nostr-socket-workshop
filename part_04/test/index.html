@@ -9,11 +9,13 @@
   <script src="../dist/bundle.min.js"></script>
   <!-- <script src="https://unpkg.com/@cmdcode/nostr-socket-workshop/dist/bundle.min.js"></script> -->
   <script type="module">
+    console.log('If you are viewing this on localhost, make sure you use the address 127.0.0.1')
+    
     const { NostrSocket, Signer } = window.nostr_socket
 
     const signer = Signer.generate()
     const pubkey = await signer.getPublicKey()
-    const relays = [ 'wss://spore.ws' ]
+    const relays = [ 'wss://relay.damus.io' ]
     const config = { echo: true, cipher : 'deadbeef' }
 
     const socket = new NostrSocket(signer, pubkey, relays, config)

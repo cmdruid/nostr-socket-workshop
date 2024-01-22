@@ -6,15 +6,15 @@
   "description": "Example project for the Nostr Devs machine-to-machine course.",
   "type": "module",
   "dependencies": {
-    "nostr-tools": "^1.12.1",
-    "websocket-polyfill": "^0.0.3"
+    "nostr-tools": "1.12.1",
+    "websocket-polyfill": "0.0.3"
   },
   "devDependencies": {
-    "@cmdcode/buff-utils": "^1.9.11",
-    "@cmdcode/crypto-utils": "^2.1.10",
-    "@types/node": "^20.3.3",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "@cmdcode/buff-utils": "1.9.11",
+    "@cmdcode/crypto-utils": "2.1.10",
+    "@types/node": "20.3.3",
+    "ts-node": "10.9.1",
+    "typescript": "5.1.6"
   },
   "scripts": {
     "ecc_demo": "node --loader ts-node/esm --no-warnings test/ecc_demo.ts",

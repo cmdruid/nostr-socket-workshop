@@ -4,6 +4,10 @@ This workshop is an introduction to development using the nostr protocol.
 
 We will be building an example project called `NostrSocket`, which communicates using a virtual socket over the nostr network.
 
+**UPDATE 01/21/24:**  
+
+There have been a number of significant changes to the `nostr-tools` library. I have decided to freeze the versions of the packages in this repository, so that the code examples will continue to work into the future. If you run into any problems, please feel free to submit an issue ticket. Thank you!
+
 ## Overview
 
 This demo project is broken down into 4 parts:
